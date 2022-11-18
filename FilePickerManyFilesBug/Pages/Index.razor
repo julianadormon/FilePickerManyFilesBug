@@ -1,0 +1,52 @@
+﻿@page "/"
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+<button @onclick="ImportImages">Select Files</button>
+
+@numFiles were selected. 
+
+@code {
+
+    int numFiles { get; set; } = 0;
+
+    async void ImportImages()
+    {
+        try
+        {
+            var customFileType = new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>>
+            {
+                    { DevicePlatform.WinUI, new[] { ".jpg", ".jpeg", ".png" } },
+                    { DevicePlatform.MacCatalyst, new[] { "jpg", "jpeg", "png" } },
+                });
+
+            PickOptions options = new()
+            {
+                PickerTitle = "Please select jpg or png files",
+                FileTypes = customFileType
+            };
+
+            var files = await FilePicker.Default.PickMultipleAsync(options);
+
+            if (files != null)
+            {
+                numFiles = files.Count();
+            }
+            else
+            {
+                numFiles = 0;
+            }
+
+            StateHasChanged();
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+
+}
+
