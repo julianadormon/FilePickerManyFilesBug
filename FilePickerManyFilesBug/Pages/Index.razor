@@ -6,18 +6,31 @@ Welcome to your new app.
 
 <button @onclick="ImportImages">Select Files</button>
 
-@numFiles were selected. 
+@numFiles were selected.
+
+<h2>Platform is @platform</h2>
 
 @code {
 
     int numFiles { get; set; } = 0;
+    string platform = "";
+
+    protected override void OnInitialized()
+    {
+        platform = GetPlatform();
+    }
+
+    public string GetPlatform()
+    {
+        return System.Runtime.InteropServices.RuntimeInformation.RuntimeIdentifier;
+    }
 
     async void ImportImages()
     {
         try
         {
             var customFileType = new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>>
-            {
+        {
                     { DevicePlatform.WinUI, new[] { ".jpg", ".jpeg", ".png" } },
                     { DevicePlatform.MacCatalyst, new[] { "jpg", "jpeg", "png" } },
                 });
@@ -48,5 +61,7 @@ Welcome to your new app.
         }
     }
 
-}
+
+
+    }
 
